@@ -32,7 +32,7 @@ const Recipe = db.define("recipe", {
     allowNull: false,
   },
   calories: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
     allowNull: false,
   },
 });

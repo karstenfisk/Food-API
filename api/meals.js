@@ -50,19 +50,34 @@ router.post("/save", async (req, res, next) => {
       const user = await User.findByPk(id);
 
       if (user) {
+        const { macros, ...recipeData } = recipe;
+
+        const newRecipe = {
+          ...recipeData,
+          protein: macros.protein,
+          fats: macros.fats,
+          carbohydrates: macros.carbohydrates,
+          calories: macros.calories,
+        };
+
         // Check if recipe already exists.
         const existingRecipe = await Recipe.findOne({
           where: {
-            ...recipe,
+            ...newRecipe,
             userId: user.id,
           },
         });
+
         if (!existingRecipe) {
-          // User found, create, save and return the recipe.
-          const recipe = await Recipe.create({ ...recipe, userId: user.id });
-          res.status(200).json(recipe);
+          // User found, create, save, and return the recipe.
+          const recipeInstance = await Recipe.create({
+            ...newRecipe,
+            userId: user.id,
+          });
+          res.status(200).json(recipeInstance);
+        } else {
+          res.status(409).json({ error: "Recipe already exists" });
         }
-        res.status(409).json({ error: "Recipe already exists" });
       } else {
         // User not found
         res.status(404).json({ error: "User not found" });
@@ -72,8 +87,8 @@ router.post("/save", async (req, res, next) => {
       res.status(401).json({ error: "Invalid or missing token" });
     }
   } catch (e) {
+    console.log(e);
     next(e);
   }
 });
-
 module.exports = router;
