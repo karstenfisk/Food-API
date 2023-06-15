@@ -8,9 +8,11 @@ const { verifyToken } = require("../utils/tokenUtils");
 const { User, Recipe } = require("../db_config");
 
 //Define Routes
-
-// POST /generate/meal - Generate a meal based on the user's preferences.
-router.post("/generate/meal", async (req, res, next) => {
+router.get("/test", (req, res) => {
+  res.send("Meals route is working");
+});
+// POST /generate - Generate a meal based on the user's preferences.
+router.post("/generate", async (req, res, next) => {
   try {
     const { diet, prepTime, cuisine, ingredients, macros, servings, type } =
       req.body;
@@ -28,6 +30,7 @@ router.post("/generate/meal", async (req, res, next) => {
 
     res.status(200).json(recipe);
   } catch (e) {
+    console.log(e);
     next(e);
   }
 });
@@ -57,7 +60,7 @@ router.post("/save", async (req, res, next) => {
         if (!existingRecipe) {
           // User found, create, save and return the recipe.
           const recipe = await Recipe.create({ ...recipe, userId: user.id });
-          res.json(recipe);
+          res.status(200).json(recipe);
         }
         res.status(409).json({ error: "Recipe already exists" });
       } else {

@@ -54,7 +54,6 @@ router.post("/register", async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   try {
-    console.log(req.body);
     // Take in username and password from req.body
     const { username, password } = req.body;
 
@@ -79,10 +78,10 @@ router.post("/login", async (req, res, next) => {
         .status(401)
         .json({ error: "Username or password is incorrect" });
     }
-    console.log(user);
 
     res.json(user);
   } catch (e) {
+    console.log(e);
     next(e);
   }
 });
