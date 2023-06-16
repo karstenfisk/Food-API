@@ -16,7 +16,7 @@ const Recipe = db.define("recipe", {
     allowNull: false,
   },
   instructions: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+    type: Sequelize.ARRAY(Sequelize.TEXT),
     allowNull: false,
   },
   protein: {

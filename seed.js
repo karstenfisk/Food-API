@@ -3,7 +3,7 @@ const { hashPassword } = require("./utils/passwordUtils");
 
 const seed = async () => {
   try {
-    await db.sync({ force: true })
+    await db.sync({ force: false });
   } catch (error) {
     console.log(error);
   }

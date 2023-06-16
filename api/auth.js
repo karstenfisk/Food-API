@@ -81,7 +81,6 @@ router.post("/login", async (req, res, next) => {
 
     res.json(user);
   } catch (e) {
-    console.log(e);
     next(e);
   }
 });
