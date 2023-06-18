@@ -107,6 +107,7 @@ router.get("/saved", async (req, res, next) => {
           where: {
             userId: user.id,
           },
+          order: [["createdAt", "DESC"]],
         });
         res.json(recipes);
       } else {
