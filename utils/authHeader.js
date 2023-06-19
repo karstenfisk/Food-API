@@ -1,14 +1,8 @@
-const express = require("express");
-const router = express.Router();
 const { User } = require("../db_config");
 const { verifyToken } = require("../utils/tokenUtils");
-const validateAuth = require("../utils/authHeader");
 
-router.get("/me", async (req, res, next) => {
+const validateAuth = async (header) => {
   try {
-    // Get the authorization header from the request
-    const authHeader = req.headers.authorization;
-
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.substring(7); // Remove the "Bearer " prefix
       // Verify the token and get the user ID
@@ -18,18 +12,18 @@ router.get("/me", async (req, res, next) => {
 
       if (user) {
         // User found, return the user data
-        res.json(user);
+        return user;
       } else {
         // User not found
-        res.status(404).json({ error: "User not found" });
+        return { error: "User not found" };
       }
     } else {
       // Invalid or missing token
-      res.status(401).json({ error: "Invalid or missing token" });
+      return { error: "Invalid or missing token" };
     }
   } catch (e) {
-    next(e);
+    return { error: "Could not validate user" };
   }
-});
+};
 
-module.exports = router;
+module.exports = validateAuth;

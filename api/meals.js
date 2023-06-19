@@ -9,6 +9,10 @@ const { User, Recipe } = require("../db_config");
 
 //Define Routes
 
+// Routes for /meals/ingredients.
+
+router.use("/ingredients", require("./ingredients"));
+
 // POST /generate - Generate a meal based on the user's preferences.
 router.post("/generate", async (req, res, next) => {
   try {
