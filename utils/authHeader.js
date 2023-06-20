@@ -1,7 +1,7 @@
 const { User } = require("../db_config");
 const { verifyToken } = require("../utils/tokenUtils");
 
-const validateAuth = async (header) => {
+const validateAuth = async (authHeader) => {
   try {
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.substring(7); // Remove the "Bearer " prefix
@@ -9,7 +9,6 @@ const validateAuth = async (header) => {
       const id = verifyToken(token);
       // Find the user in the database using the ID
       const user = await User.findByPk(id);
-
       if (user) {
         // User found, return the user data
         return user;

@@ -4,7 +4,7 @@ const router = express.Router();
 const { Ingredient, User } = require("../db_config");
 const validateAuth = require("../utils/authHeader");
 
-//GET /ingredients - Get all ingredients by user.
+//GET api/meals/ingredients - Get all ingredients by user.
 
 router.get("/", async (req, res, next) => {
   try {
@@ -20,8 +20,11 @@ router.get("/", async (req, res, next) => {
       return res.json([]);
     }
 
-    res.json(ingredients);
+    const ingredientNames = ingredients.map((ingredient) => ingredient.name);
+
+    res.json(ingredientNames);
   } catch (e) {
+    console.log(e);
     next(e);
   }
 });
@@ -40,14 +43,16 @@ router.post("/", async (req, res, next) => {
       return res.status(401).json({ error: "Could not validate user" });
     }
 
-    let ingredient = await Ingredient.findOne({ name: lowerCaseName });
+    let ingredient = await Ingredient.findOne({
+      where: { name: lowerCaseName },
+    });
 
     if (!ingredient) {
       ingredient = await Ingredient.create({ name: lowerCaseName });
     }
     await user.addIngredient(ingredient);
 
-    res.status(201).json(ingredient);
+    res.status(201).json({ name: ingredient.name });
   } catch (e) {
     next(e);
   }
@@ -73,7 +78,13 @@ router.delete("/:name", async (req, res, next) => {
 
     const ingredients = await user.getIngredients();
 
-    res.json(ingredients);
+    if (!ingredients) {
+      return res.json([]);
+    }
+
+    const ingredientNames = ingredients.map((ingredient) => ingredient.name);
+
+    res.json(ingredientNames);
   } catch (e) {
     next(e);
   }

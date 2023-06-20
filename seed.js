@@ -1,4 +1,4 @@
-const { User, db } = require("./db_config");
+const { User, db, Ingredient } = require("./db_config");
 const { hashPassword } = require("./utils/passwordUtils");
 
 const seed = async () => {
