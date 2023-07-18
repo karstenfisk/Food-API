@@ -1,0 +1,24 @@
+You will notice a missing openAiUtils file in this repository. I have decided to exclude it to keep the prompt engineering to myself. However, below I will provide steps needed to create your own openAiUtils file.
+
+1. Create generateRecipe function.
+2. Create generatePrompt function.
+3. Configure prompt and recipe generators to receive objects in this format:
+     generateRecipe({
+       diet: "Any",
+       prepTime: "Any",
+       cuisine: "Any",
+       macros: {
+       protein: "4 g",
+       fats: "0 g",
+       carbohydrates: "0 g",
+       calories: "800",
+     },
+       ingredients: ["Egg"],
+     });
+4. Parse OpenAI Response into valid json format like so:
+    {
+        title: string,
+        ingredients: [string]
+        instructions: [string]
+        macros: {protein: string, fats: string, carbohydrates: string, calories: string}
+    }
