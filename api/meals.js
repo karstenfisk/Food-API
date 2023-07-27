@@ -7,6 +7,8 @@ const { verifyToken } = require("../utils/tokenUtils");
 
 const { User, Recipe } = require("../db_config");
 
+const validateAuth = require("../utils/authHeader");
+
 //Define Routes
 
 // Routes for /meals/ingredients.
@@ -16,8 +18,19 @@ router.use("/ingredients", require("./ingredients"));
 // POST /generate - Generate a meal based on the user's preferences.
 router.post("/generate", async (req, res, next) => {
   try {
+    const authHeader = req.headers.authorization;
+    const user = await validateAuth(authHeader);
+    if (user.error) {
+      return res.status(401).json({ error: "Could not validate user" });
+    }
     const { diet, prepTime, cuisine, ingredients, macros, servings, type } =
       req.body;
+
+    let recipeIngredients = [];
+    if (ingredients === true) {
+      const userIngredients = await user.getIngredients();
+      recipeIngredients = userIngredients.map((ingredient) => ingredient.name);
+    }
 
     const conditions = {
       diet,
@@ -27,6 +40,7 @@ router.post("/generate", async (req, res, next) => {
       macros,
       servings,
       type,
+      ingredients: recipeIngredients,
     };
     const recipe = await generateRecipe(conditions);
 
